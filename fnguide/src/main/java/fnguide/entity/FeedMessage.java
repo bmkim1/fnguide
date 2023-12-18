@@ -22,7 +22,7 @@ public class FeedMessage {
 
     @Id
     @Column(name = "feed_message_seq")
-    private int feedMessageSeq;
+    private Integer feedMessageSeq;
 
     @Column(name = "categories")
     private String categories;

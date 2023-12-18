@@ -1,9 +1,17 @@
 package fnguide.repository;
 
 import fnguide.entity.FeedMessage;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface FeedMessageRepository extends JpaRepository<FeedMessage, Integer> {
+
+    List<FeedMessage> findAllByOrderByFeedMessageSeqAsc();
+
+    Page<FeedMessage> findAllByOrderByFeedMessageSeqAsc(Pageable pageable);
 }

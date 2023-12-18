@@ -1,19 +1,21 @@
 package fnguide.service;
 
-import fnguide.dto.OverseaCorpDto;
+import fnguide.dto.OverseaRssDto;
 import fnguide.entity.FeedMessage;
-import fnguide.entity.InvestedCorp;
-import fnguide.entity.OverseaDiscoveredCorp;
 import fnguide.repository.FeedMessageRepository;
 import fnguide.repository.InvestedCorpRepository;
 import fnguide.repository.OverseaDiscoveredCorpRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,93 +26,68 @@ public class FnguideService {
     private final FeedMessageRepository feedMessageRepository;
     private final OverseaDiscoveredCorpRepository overseaDiscoveredCorpRepository;
 
-    public List<InvestedCorp> investedCorps () {
-        List<InvestedCorp> investedCorp = investedCorpRepository.findAll();
-        return investedCorp;
-    }
-    public void writeCsv (Writer writer, String fileDate) throws IOException {
-        CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
-        csvPrinter.printRecord("oversea_seq", "dmn", "company_name", "categories", "company_infos",
-                                "file_date", "homepage_url");
+    public List<OverseaRssDto> createRssDto (String fileDate) {
+        List<OverseaRssDto> rssDtos = new ArrayList<>();
 
-        List<InvestedCorp> investedCorpList = investedCorps();
+        int pageNumber = 0;
+        while (true) {
+            Pageable pageable = PageRequest.of(pageNumber,1000);
+            Page<FeedMessage> feedMessages = feedMessageRepository.findAllByOrderByFeedMessageSeqAsc(pageable);
 
-        try {
-            for (InvestedCorp investedCorp : investedCorpList) {
-                if (investedCorp.getFileDate().equals(fileDate)) {
-                    csvPrinter.printRecord(
-                            investedCorp.getOverseaSeq(),
-                            investedCorp.getDmn(),
-                            investedCorp.getCompanyName(),
-                            investedCorp.getCategories(),
-                            investedCorp.getCompanyInfos(),
-                            investedCorp.getFileDate(),
-                            investedCorp.getHomepageUrl()
-                    );
+            for (FeedMessage feedMessage : feedMessages) {
+                if (feedMessage.getFileDate().equals(fileDate)) {
+                    OverseaRssDto rssDto = convertToDto(feedMessage);
+                    rssDtos.add(rssDto);
                 }
             }
-        } catch (IOException e) {
-            throw new RuntimeException();
+
+            if (!feedMessages.hasNext()) {
+                break;
+            }
+
+            pageNumber++;
         }
+
+        return rssDtos;
     }
 
-    public void createRssCsv (Writer writer, String fileDate) throws IOException {
+    public void createRssCsv (Writer writer, List<OverseaRssDto> rssDtoList) throws IOException {
         CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
+
         csvPrinter.printRecord("feed_message_seq", "categories", "created_at",
                 "file_date", "creator", "description", "keywords", "link", "source", "title");
 
-        List<FeedMessage> feedMessages = feedMessageRepository.findAll();
-
-        try {
-            for (FeedMessage feedMessage : feedMessages) {
-                if (feedMessage.getFileDate().equals(fileDate)) {
-                    csvPrinter.printRecord(
-                            feedMessage.getFeedMessageSeq(),
-                            feedMessage.getCategories(),
-                            feedMessage.getCreateAt(),
-                            feedMessage.getFileDate(),
-                            feedMessage.getCreator(),
-                            feedMessage.getDescription(),
-                            feedMessage.getKeywords(),
-                            feedMessage.getLink(),
-                            feedMessage.getSource(),
-                            feedMessage.getTitle()
-                    );
-
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException();
+        for (OverseaRssDto rssDto : rssDtoList) {
+            csvPrinter.printRecord(
+                    rssDto.getFeedMessageSeq(),
+                    rssDto.getCategories(),
+                    rssDto.getCreateAt(),
+                    rssDto.getFileDate(),
+                    rssDto.getCreator(),
+                    rssDto.getDescription(),
+                    rssDto.getKeywords(),
+                    rssDto.getLink(),
+                    rssDto.getSource(),
+                    rssDto.getTitle()
+            );
         }
     }
 
-    public void createOverseaDiscoveredCorp (Writer writer, String fileDate) throws IOException {
-        CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT);
-        csvPrinter.printRecord("oversea_seq", "dmn", "discovered_date",
-                "tech_code_1", "tech_code_2", "bsn_code_1", "bsn_code_2", "vc_cnt");
-
-        List<OverseaDiscoveredCorp> overseaDiscoveredCorps = overseaDiscoveredCorpRepository.findAll();
-
-        String tgDate = "";
-        List<OverseaCorpDto> getOverseaResult = overseaDiscoveredCorpRepository.getCustomResults(tgDate);
-
-        try {
-            for (OverseaDiscoveredCorp overseaDiscoveredCorp : overseaDiscoveredCorps) {
-                if (overseaDiscoveredCorp.getDiscoveredDate().equals(fileDate)) {
-                    csvPrinter.printRecord(
-                            overseaDiscoveredCorp.getOverseaSeq(),
-                            overseaDiscoveredCorp.getDmn(),
-                            overseaDiscoveredCorp.getDiscoveredDate(),
-                            overseaDiscoveredCorp.getTechCode1(),
-                            overseaDiscoveredCorp.getTechCode2(),
-                            overseaDiscoveredCorp.getBsnCode1(),
-                            overseaDiscoveredCorp.getBsnCode2()
-                    );
-                }
-            }
-        } catch (IOException e) {
-            throw new RuntimeException();
-        }
+    private OverseaRssDto convertToDto(FeedMessage feedMessage) {
+        OverseaRssDto rssDto = new OverseaRssDto();
+        rssDto.setFeedMessageSeq(feedMessage.getFeedMessageSeq());
+        rssDto.setCategories(feedMessage.getCategories());
+        rssDto.setCreateAt(feedMessage.getCreateAt());
+        rssDto.setFileDate(feedMessage.getFileDate());
+        rssDto.setCreator(feedMessage.getCreator());
+        rssDto.setDescription(feedMessage.getDescription());
+        rssDto.setKeywords(feedMessage.getKeywords());
+        rssDto.setLink(feedMessage.getLink());
+        rssDto.setSource(feedMessage.getSource());
+        rssDto.setTitle(feedMessage.getTitle());
+        return rssDto;
     }
+
+
 
 }
