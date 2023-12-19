@@ -11,7 +11,6 @@ import java.util.List;
 @Repository
 public interface FeedMessageRepository extends JpaRepository<FeedMessage, Integer> {
 
-    List<FeedMessage> findAllByOrderByFeedMessageSeqAsc();
-
     Page<FeedMessage> findAllByOrderByFeedMessageSeqAsc(Pageable pageable);
+
 }

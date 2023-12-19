@@ -15,10 +15,10 @@ public class OverseaInfoDto {
     private String fileDate;
     private String homepageUrl;
     private String imagePath;
-    private int statusCode;
-    private boolean live;
+    private Integer statusCode;
+    private String live;
     private String description;
     private String title;
     private String keyword;
-    private int vcCnt;
+    private Long vcCnt;
 }

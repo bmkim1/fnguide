@@ -20,11 +20,9 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FnguideService {
+public class OverseaRssService {
 
-    private final InvestedCorpRepository investedCorpRepository;
     private final FeedMessageRepository feedMessageRepository;
-    private final OverseaDiscoveredCorpRepository overseaDiscoveredCorpRepository;
 
     public List<OverseaRssDto> createRssDto (String fileDate) {
         List<OverseaRssDto> rssDtos = new ArrayList<>();

@@ -1,8 +1,10 @@
 package fnguide.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class OverseaCorpDto {
 
     private String overseaSeq;
