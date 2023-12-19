@@ -2,9 +2,11 @@ package fnguide.controller;
 
 import fnguide.dto.OverseaCorpDto;
 import fnguide.dto.OverseaInfoDto;
+import fnguide.dto.OverseaKeywordDto;
 import fnguide.dto.OverseaRssDto;
 import fnguide.service.OverseaCorpService;
 import fnguide.service.OverseaInfoService;
+import fnguide.service.OverseaKeywordService;
 import fnguide.service.OverseaRssService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class OverseaController {
     private final OverseaRssService overseaRssService;
     private final OverseaInfoService overseaInfoService;
     private final OverseaCorpService overseaCorpService;
+    private final OverseaKeywordService overseaKeywordService;
 
     @GetMapping(value = "/overseaRss", produces = "text/csv")
     public void rssExport(HttpServletResponse response, @RequestParam String filePath, @RequestParam String fileDate) throws IOException {
@@ -84,28 +87,23 @@ public class OverseaController {
         }
     }
 
-    @GetMapping(value = "/overseaCorp")
-    public ResponseEntity<List<OverseaCorpDto>> testInfo (@RequestParam String fileDate) {
-        List<OverseaCorpDto> infos = overseaCorpService.getOverseaCorp(fileDate);
-        return ResponseEntity.ok(infos);
-    }
+    @GetMapping(value = "/overseaKeyword", produces = "text/csv")
+    public void overseaKeywordExport (HttpServletResponse response, @RequestParam String filePath, @RequestParam String fileDate) {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/csv; charset=UTF-8");
 
+        String exportFileName = "oversea_discovered_corp_keyword" + fileDate + ".csv";
+        response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
 
-    /*@GetMapping(value = "/overseaCorp", produces = "text/csv")
-    public ResponseEntity<String> overseaCorp(@RequestParam String filePath,
-                                            @RequestParam String fileDate) {
-        try {
-            String exportFileName = "oversea_discovered_corp_" + fileDate + ".csv";
-            File csvFile = new File(filePath, exportFileName);
+        List<OverseaKeywordDto> keywordDtoList = overseaKeywordService.getOverseaKeywordList(fileDate);
 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile))) {
-                fnguideService.createOverseaDiscoveredCorp(writer, fileDate);
-            }
+        String serverFilePath = filePath + File.separator + exportFileName;
 
-            return ResponseEntity.ok("CSV file 생성 완료: " + csvFile.getAbsolutePath());
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(serverFilePath, StandardCharsets.UTF_8))) {
+            writer.write('\ufeff');
+            overseaKeywordService.createOverseaKeywordCsv(writer, keywordDtoList);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("CSV file 생성 실패: " + e.getMessage());
+            throw new RuntimeException("csv 파일 저장 실패 : " + e.getMessage());
         }
-    }*/
+    }
 }
