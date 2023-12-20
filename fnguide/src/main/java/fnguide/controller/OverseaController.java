@@ -1,16 +1,15 @@
 package fnguide.controller;
 
-import fnguide.dto.OverseaCorpDto;
-import fnguide.dto.OverseaInfoDto;
-import fnguide.dto.OverseaKeywordDto;
-import fnguide.dto.OverseaRssDto;
-import fnguide.service.OverseaCorpService;
-import fnguide.service.OverseaInfoService;
-import fnguide.service.OverseaKeywordService;
-import fnguide.service.OverseaRssService;
+import fnguide.dto.oversea.OverseaCorpDto;
+import fnguide.dto.oversea.OverseaInfoDto;
+import fnguide.dto.oversea.OverseaKeywordDto;
+import fnguide.dto.oversea.OverseaRssDto;
+import fnguide.service.oversea.OverseaCorpService;
+import fnguide.service.oversea.OverseaInfoService;
+import fnguide.service.oversea.OverseaKeywordService;
+import fnguide.service.oversea.OverseaRssService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.*;

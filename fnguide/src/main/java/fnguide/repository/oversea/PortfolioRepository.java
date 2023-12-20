@@ -1,6 +1,6 @@
-package fnguide.repository;
+package fnguide.repository.oversea;
 
-import fnguide.entity.Portfolio;
+import fnguide.entity.oversea.Portfolio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,4 +1,4 @@
-package fnguide.entity;
+package fnguide.entity.oversea;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

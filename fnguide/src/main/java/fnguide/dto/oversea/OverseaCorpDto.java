@@ -1,4 +1,4 @@
-package fnguide.dto;
+package fnguide.dto.oversea;
 
 import lombok.Getter;
 import lombok.Setter;

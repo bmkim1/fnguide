@@ -1,9 +1,7 @@
-package fnguide.service;
+package fnguide.service.oversea;
 
-import fnguide.dto.OverseaInfoDto;
-import fnguide.entity.OverseaDiscoveredCorp;
-import fnguide.entity.Portfolio;
-import fnguide.repository.InvestedCorpRepository;
+import fnguide.dto.oversea.OverseaInfoDto;
+import fnguide.repository.oversea.InvestedCorpRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -13,7 +11,6 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor

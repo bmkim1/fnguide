@@ -1,6 +1,6 @@
-package fnguide.repository;
+package fnguide.repository.oversea;
 
-import fnguide.entity.OverseaDiscoveredCorpKeyword;
+import fnguide.entity.oversea.OverseaDiscoveredCorpKeyword;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

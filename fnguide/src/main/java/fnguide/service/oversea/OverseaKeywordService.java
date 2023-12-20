@@ -1,8 +1,8 @@
-package fnguide.service;
+package fnguide.service.oversea;
 
 
-import fnguide.dto.OverseaKeywordDto;
-import fnguide.repository.OverseaDiscoveredCorpKeywordRepository;
+import fnguide.dto.oversea.OverseaKeywordDto;
+import fnguide.repository.oversea.OverseaDiscoveredCorpKeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;

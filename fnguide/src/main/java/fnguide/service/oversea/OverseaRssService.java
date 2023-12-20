@@ -1,10 +1,8 @@
-package fnguide.service;
+package fnguide.service.oversea;
 
-import fnguide.dto.OverseaRssDto;
-import fnguide.entity.FeedMessage;
-import fnguide.repository.FeedMessageRepository;
-import fnguide.repository.InvestedCorpRepository;
-import fnguide.repository.OverseaDiscoveredCorpRepository;
+import fnguide.dto.oversea.OverseaRssDto;
+import fnguide.entity.oversea.FeedMessage;
+import fnguide.repository.oversea.FeedMessageRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;

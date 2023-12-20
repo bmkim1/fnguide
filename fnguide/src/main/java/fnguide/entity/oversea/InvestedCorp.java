@@ -1,4 +1,4 @@
-package fnguide.entity;
+package fnguide.entity.oversea;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
