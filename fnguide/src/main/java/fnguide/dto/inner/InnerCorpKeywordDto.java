@@ -18,7 +18,7 @@ public class InnerCorpKeywordDto {
     private Integer utilityFreq;
     private Integer rndFreq;
     private Integer homepageFreq;
-    private Integer innerKeywordFreq;
+    private Integer innerFreq;
     private Integer keywordRowCount;
 
 }

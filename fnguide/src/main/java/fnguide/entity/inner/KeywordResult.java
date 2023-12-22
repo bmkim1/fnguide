@@ -1,3 +1,4 @@
+/*
 package fnguide.entity.inner;
 
 import jakarta.persistence.Column;
@@ -89,3 +90,4 @@ public class KeywordResult {
     @Column(name = "project_name")
     private String projectName;
 }
+*/

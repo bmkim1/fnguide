@@ -1,6 +1,8 @@
 package fnguide.controller;
 
 import fnguide.dto.inner.InnerCorpDto;
+import fnguide.dto.inner.InnerCorpKeywordDto;
+import fnguide.service.inner.InnerCorpKeywordService;
 import fnguide.service.inner.InnerCorpService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +25,11 @@ import java.util.List;
 public class InnerController {
 
     private final InnerCorpService innerCorpService;
+    private final InnerCorpKeywordService innerCorpKeywordService;
 
     @GetMapping("/test")
-    public ResponseEntity<List<InnerCorpDto>> test (@RequestParam String fileDate) {
-        List<InnerCorpDto> innerCorpDtoList = innerCorpService.getInnerCorp(fileDate);
+    public ResponseEntity<List<InnerCorpKeywordDto>> test (@RequestParam String fileDate) {
+        List<InnerCorpKeywordDto> innerCorpDtoList = innerCorpKeywordService.getInnerKeyword(fileDate);
         return ResponseEntity.ok(innerCorpDtoList);
     }
 

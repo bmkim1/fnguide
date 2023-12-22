@@ -1,3 +1,4 @@
+/*
 package fnguide.entity.inner;
 
 import jakarta.persistence.Column;
@@ -53,3 +54,4 @@ public class KeywordDictionary {
     @Column(name = "create_date")
     private LocalDate createDate;
 }
+*/

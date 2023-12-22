@@ -1,3 +1,4 @@
+/*
 package fnguide.repository.Inner;
 
 import fnguide.entity.inner.KeywordDictionary;
@@ -8,3 +9,4 @@ import org.springframework.stereotype.Repository;
 public interface KeywordDictionaryRepository extends JpaRepository<KeywordDictionary, String> {
 
 }
+*/
