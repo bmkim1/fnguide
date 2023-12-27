@@ -2,6 +2,7 @@ package fnguide.controller;
 
 import fnguide.dto.inner.InnerCorpDto;
 import fnguide.dto.inner.InnerCorpKeywordDto;
+import fnguide.dto.inner.InnerCorpNormalKeywordDto;
 import fnguide.service.inner.InnerCorpKeywordService;
 import fnguide.service.inner.InnerCorpService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ public class InnerController {
 
     private final InnerCorpService innerCorpService;
     private final InnerCorpKeywordService innerCorpKeywordService;
+    private final InnerCorpNormalKeywordDto innerCorpNormalKeywordDto;
 
     @GetMapping("/test")
     public ResponseEntity<List<InnerCorpKeywordDto>> test (@RequestParam String fileDate) {
@@ -48,6 +50,26 @@ public class InnerController {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(serverFilePath, StandardCharsets.UTF_8))) {
             writer.write('\ufeff');
             innerCorpService.createInnerCorpCsv(writer, innerCorpDtoList);
+        } catch (IOException e) {
+            throw new RuntimeException("csv 파일 저장 실패 : " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/innerKeyword")
+    public void innerKeywordExport(HttpServletResponse response, @RequestParam String filePath, @RequestParam String fileDate) throws IOException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/csv; charset=UTF-8");
+
+        String exportFileName = "discovered_corp_keyword_" + fileDate + ".csv";
+        response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
+
+        List<InnerCorpKeywordDto> keywordDtoList = innerCorpKeywordService.getInnerKeyword(fileDate);
+
+        String serverFilePath = filePath + File.separator + exportFileName;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(serverFilePath, StandardCharsets.UTF_8))) {
+            writer.write('\ufeff');
+            innerCorpKeywordService.createInnerKeywordCsv(writer, keywordDtoList);
         } catch (IOException e) {
             throw new RuntimeException("csv 파일 저장 실패 : " + e.getMessage());
         }

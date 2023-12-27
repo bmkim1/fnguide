@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class InnerCorpKeywordDto {
+public class InnerCorpNormalKeywordDto {
 
     private String enr;
     private String companyName;
@@ -20,5 +20,5 @@ public class InnerCorpKeywordDto {
     private Long homepageFreq;
     private Long innerKeywordFreq;
     private Long keywordRowCount;
-
+    private Long keywordFreq;
 }
