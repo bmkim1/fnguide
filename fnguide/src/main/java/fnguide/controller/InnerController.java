@@ -4,6 +4,7 @@ import fnguide.dto.inner.InnerCorpDto;
 import fnguide.dto.inner.InnerCorpKeywordDto;
 import fnguide.dto.inner.InnerCorpNormalKeywordDto;
 import fnguide.service.inner.InnerCorpKeywordService;
+import fnguide.service.inner.InnerCorpNormalKeywordService;
 import fnguide.service.inner.InnerCorpService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +28,12 @@ public class InnerController {
 
     private final InnerCorpService innerCorpService;
     private final InnerCorpKeywordService innerCorpKeywordService;
-    private final InnerCorpNormalKeywordDto innerCorpNormalKeywordDto;
+    private final InnerCorpNormalKeywordService innerCorpNormalKeywordService;
 
     @GetMapping("/test")
-    public ResponseEntity<List<InnerCorpKeywordDto>> test (@RequestParam String fileDate) {
-        List<InnerCorpKeywordDto> innerCorpDtoList = innerCorpKeywordService.getInnerKeyword(fileDate);
-        return ResponseEntity.ok(innerCorpDtoList);
+    public ResponseEntity<List<InnerCorpNormalKeywordDto>> test (@RequestParam String fileDate) {
+        List<InnerCorpNormalKeywordDto> normalKeywordDtos = innerCorpNormalKeywordService.getNormalKeyword(fileDate);
+        return ResponseEntity.ok(normalKeywordDtos);
     }
 
     @GetMapping("/innerCorp")
@@ -70,6 +71,26 @@ public class InnerController {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(serverFilePath, StandardCharsets.UTF_8))) {
             writer.write('\ufeff');
             innerCorpKeywordService.createInnerKeywordCsv(writer, keywordDtoList);
+        } catch (IOException e) {
+            throw new RuntimeException("csv 파일 저장 실패 : " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/innerNormalKeyword")
+    public void innerNormalKeywordExport(HttpServletResponse response, @RequestParam String filePath, @RequestParam String fileDate) throws IOException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/csv; charset=UTF-8");
+
+        String exportFileName = "discovered_corp_normal_keyword_" + fileDate + ".csv";
+        response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
+
+        List<InnerCorpNormalKeywordDto> normalKeywordDtoList = innerCorpNormalKeywordService.getNormalKeyword(fileDate);
+
+        String serverFilePath = filePath + File.separator + exportFileName;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(serverFilePath, StandardCharsets.UTF_8))) {
+            writer.write('\ufeff');
+            innerCorpNormalKeywordService.createNormalKeywordCsv(writer, normalKeywordDtoList);
         } catch (IOException e) {
             throw new RuntimeException("csv 파일 저장 실패 : " + e.getMessage());
         }
