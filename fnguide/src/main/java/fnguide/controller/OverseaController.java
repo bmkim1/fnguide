@@ -34,7 +34,7 @@ public class OverseaController {
         String exportFileName = "oversea_feed_" + fileDate + ".csv";
         response.setHeader("Content-disposition", "attachment;filename=" + exportFileName);
 
-        List<OverseaRssDto> rssDtoList = overseaRssService.createRssDto(fileDate);
+        List<OverseaRssDto> rssDtoList = overseaRssService.getOverseaRss(fileDate);
 
         String serverFilePath = filePath + File.separator + exportFileName;
 

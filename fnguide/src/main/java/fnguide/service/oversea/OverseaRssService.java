@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,29 +23,29 @@ public class OverseaRssService {
 
     private final FeedMessageRepository feedMessageRepository;
 
-    public List<OverseaRssDto> createRssDto (String fileDate) {
-        List<OverseaRssDto> rssDtos = new ArrayList<>();
+    public List<OverseaRssDto> getOverseaRss (String fileDate) {
+        List<Object[]> resultList = feedMessageRepository.getOverseaRss(fileDate);
+        List<OverseaRssDto> rssDtoList = convertToRssDto(resultList);
+        return rssDtoList;
+    }
 
-        int pageNumber = 0;
-        while (true) {
-            Pageable pageable = PageRequest.of(pageNumber,1000);
-            Page<FeedMessage> feedMessages = feedMessageRepository.findAllByOrderByFeedMessageSeqAsc(pageable);
-
-            for (FeedMessage feedMessage : feedMessages) {
-                if (feedMessage.getFileDate().equals(fileDate)) {
-                    OverseaRssDto rssDto = convertToDto(feedMessage);
-                    rssDtos.add(rssDto);
-                }
-            }
-
-            if (!feedMessages.hasNext()) {
-                break;
-            }
-
-            pageNumber++;
+    private List<OverseaRssDto> convertToRssDto(List<Object[]> resultList) {
+        List<OverseaRssDto> rssDtoList = new ArrayList<>();
+        for (Object[] obj : resultList) {
+            OverseaRssDto dto = new OverseaRssDto();
+            dto.setFeedMessageSeq((Integer) obj[0]);
+            dto.setCategories((String) obj[1]);
+            dto.setCreateAt((String) obj[2]);
+            dto.setFileDate((String) obj[3]);
+            dto.setCreator((String) obj[4]);
+            dto.setDescription((String) obj[5]);
+            dto.setKeywords((String) obj[6]);
+            dto.setLink((String) obj[7]);
+            dto.setSource((String) obj[8]);
+            dto.setTitle((String) obj[9]);
+            rssDtoList.add(dto);
         }
-
-        return rssDtos;
+        return rssDtoList;
     }
 
     public void createRssCsv (Writer writer, List<OverseaRssDto> rssDtoList) throws IOException {
@@ -68,22 +69,5 @@ public class OverseaRssService {
             );
         }
     }
-
-    private OverseaRssDto convertToDto(FeedMessage feedMessage) {
-        OverseaRssDto rssDto = new OverseaRssDto();
-        rssDto.setFeedMessageSeq(feedMessage.getFeedMessageSeq());
-        rssDto.setCategories(feedMessage.getCategories());
-        rssDto.setCreateAt(feedMessage.getCreateAt());
-        rssDto.setFileDate(feedMessage.getFileDate());
-        rssDto.setCreator(feedMessage.getCreator());
-        rssDto.setDescription(feedMessage.getDescription());
-        rssDto.setKeywords(feedMessage.getKeywords());
-        rssDto.setLink(feedMessage.getLink());
-        rssDto.setSource(feedMessage.getSource());
-        rssDto.setTitle(feedMessage.getTitle());
-        return rssDto;
-    }
-
-
 
 }

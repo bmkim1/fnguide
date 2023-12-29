@@ -13,7 +13,7 @@ public class OverseaRssDto {
 
     private Integer feedMessageSeq;
     private String categories;
-    private LocalDateTime createAt;
+    private String createAt;
     private String fileDate;
     private String creator;
     private String description;
