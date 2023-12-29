@@ -11,12 +11,26 @@ import java.util.List;
 @Repository
 public interface InnerDiscoveredCorpRepository extends JpaRepository<InnerDiscoveredCorp, String> {
 
-    @Query("SELECT t2.enr, t2.companyName, t2.crn, t1.discoveredDate, t1.tech1, t1.techCode1, t1.tech2, t1.techCode2 " +
-            "FROM InnerDiscoveredCorp t1 " +
-            "LEFT JOIN UnvCompany t2 ON t1.enr = t2.enr " +
-            "WHERE t1.discoveredDate = :discoveredDate " +
-            "ORDER BY t1.discoveredDate, t2.enr")
-    List<Object[]> getInnerCorp(@Param("discoveredDate") String discoveredDate);
+    @Query(nativeQuery = true, value =
+            "with tg as (\n" +
+                    "\tselect :tgDate tg_date\n" +
+                    ")\n" +
+                    "\n" +
+                    "SELECT\n" +
+                    "\tt2.enr\n" +
+                    "\t, t2.company_name\n" +
+                    "\t, t2.crn\n" +
+                    "\t, discovered_date\n" +
+                    "\t, CASE WHEN trim(tech_1) = '' THEN null ELSE tech_1 END AS tech_1\n" +
+                    "\t, CASE WHEN trim(tech_code_1) = '' THEN null ELSE tech_code_1 END AS tech_code_1\n" +
+                    "\t, CASE WHEN trim(tech_2) = '' THEN null ELSE tech_2 END AS tech_2\n" +
+                    "\t, CASE WHEN trim(tech_code_2) = '' THEN null ELSE tech_code_2 END AS tech_code_2\n" +
+                    "FROM tg, fnguide.inner_discovered_corp t1\n" +
+                    "LEFT JOIN public.unv_company t2\n" +
+                    "ON t1.enr = t2.enr\n" +
+                    "where discovered_date = tg.tg_date\n" +
+                    "order by discovered_date, enr ")
+    List<Object[]> getInnerCorp(@Param("tgDate") String tgDate);
 
     @Query(nativeQuery = true,value =
             "WITH tg as (\n" +

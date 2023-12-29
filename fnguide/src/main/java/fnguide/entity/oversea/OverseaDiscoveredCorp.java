@@ -38,6 +38,4 @@ public class OverseaDiscoveredCorp {
     @Column(name = "bsn_code_2", nullable = true)
     private String bsnCode2;
 
-    @OneToMany(mappedBy = "overseaDiscoveredCorp", fetch = FetchType.LAZY)
-    private List<Portfolio> portfolios;
 }
