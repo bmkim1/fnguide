@@ -20,7 +20,7 @@ public class OverseaCorpService {
 
     public List<OverseaCorpDto> getOverseaCorp (String fileDate) {
 
-        List<Object[]> resultList = overseaDiscoveredCorpRepository.findAllByOrderByOverseaSeqAsc(fileDate);
+        List<Object[]> resultList = overseaDiscoveredCorpRepository.getOverseaDiscoveredCorp(fileDate);
         List<OverseaCorpDto> corpDtoList = convertOverseaCorpDate(resultList);
         return corpDtoList;
 

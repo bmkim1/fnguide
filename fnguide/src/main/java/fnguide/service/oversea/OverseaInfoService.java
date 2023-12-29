@@ -19,7 +19,7 @@ public class OverseaInfoService {
     private final InvestedCorpRepository investedCorpRepository;
 
     public List<OverseaInfoDto> getOverseaInfo(String fileDate) {
-        List<Object[]> resultList = investedCorpRepository.findAllByOrderByOverseaSeqAsc(fileDate);
+        List<Object[]> resultList = investedCorpRepository.getOverseaScrapedCorp(fileDate);
         List<OverseaInfoDto> dtoList = convertOverseaInfoData(resultList);
 
         return dtoList;

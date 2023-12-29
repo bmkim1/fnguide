@@ -2,7 +2,7 @@ package fnguide.service.oversea;
 
 
 import fnguide.dto.oversea.OverseaKeywordDto;
-import fnguide.repository.oversea.OverseaDiscoveredCorpKeywordRepository;
+import fnguide.repository.oversea.OverseaDiscoveredCorpRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -17,10 +17,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OverseaKeywordService {
 
-    private final OverseaDiscoveredCorpKeywordRepository overseaDiscoveredCorpKeywordRepository;
+    private final OverseaDiscoveredCorpRepository repository;
 
     public List<OverseaKeywordDto> getOverseaKeywordList (String fileDate) {
-        List<Object[]> resultList = overseaDiscoveredCorpKeywordRepository.findAllByOrderByOverseaSeqAsc(fileDate);
+        List<Object[]> resultList = repository.getOverseaKeyword(fileDate);
         List<OverseaKeywordDto> overseaKeywordList = convertOverseaKeywordData(resultList);
         return overseaKeywordList;
     }
